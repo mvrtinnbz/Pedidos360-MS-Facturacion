@@ -4,10 +4,12 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+// Copia local del contrato del evento publicado por ms-orders.
 public class OrdenCreadaEvent {
 
     private Long ordenId;
     private String usuarioId;
+    private String nombreCliente;
     private String email;
     private BigDecimal total;
     private String fechaCreacion;
@@ -16,51 +18,24 @@ public class OrdenCreadaEvent {
     public OrdenCreadaEvent() {
     }
 
-    public Long getOrdenId() {
-        return ordenId;
-    }
+    public Long getOrdenId() { return ordenId; }
+    public void setOrdenId(Long ordenId) { this.ordenId = ordenId; }
 
-    public void setOrdenId(Long ordenId) {
-        this.ordenId = ordenId;
-    }
+    public String getUsuarioId() { return usuarioId; }
+    public void setUsuarioId(String usuarioId) { this.usuarioId = usuarioId; }
 
-    public String getUsuarioId() {
-        return usuarioId;
-    }
+    public String getNombreCliente() { return nombreCliente; }
+    public void setNombreCliente(String nombreCliente) { this.nombreCliente = nombreCliente; }
 
-    public void setUsuarioId(String usuarioId) {
-        this.usuarioId = usuarioId;
-    }
+    public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
 
-    public String getEmail() {
-        return email;
-    }
+    public BigDecimal getTotal() { return total; }
+    public void setTotal(BigDecimal total) { this.total = total; }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
+    public String getFechaCreacion() { return fechaCreacion; }
+    public void setFechaCreacion(String fechaCreacion) { this.fechaCreacion = fechaCreacion; }
 
-    public BigDecimal getTotal() {
-        return total;
-    }
-
-    public void setTotal(BigDecimal total) {
-        this.total = total;
-    }
-
-    public String getFechaCreacion() {
-        return fechaCreacion;
-    }
-
-    public void setFechaCreacion(String fechaCreacion) {
-        this.fechaCreacion = fechaCreacion;
-    }
-
-    public List<OrdenItemEvent> getItems() {
-        return items;
-    }
-
-    public void setItems(List<OrdenItemEvent> items) {
-        this.items = items;
-    }
+    public List<OrdenItemEvent> getItems() { return items; }
+    public void setItems(List<OrdenItemEvent> items) { this.items = items; }
 }

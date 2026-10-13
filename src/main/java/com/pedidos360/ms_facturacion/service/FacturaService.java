@@ -10,6 +10,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -19,6 +21,11 @@ public class FacturaService {
 
     private static final Logger log =
             LoggerFactory.getLogger(FacturaService.class);
+
+    // IVA Chile: 19%. El precio al consumidor ya lo incluye.
+    private static final BigDecimal FACTOR_IVA = new BigDecimal("1.19");
+
+    private static final String TIPO_DOCUMENTO = "BOLETA ELECTRÓNICA";
 
     private final FacturaRepository repository;
 
@@ -56,9 +63,20 @@ public class FacturaService {
                 )
         );
 
+        factura.setTipoDocumento(TIPO_DOCUMENTO);
         factura.setUsuarioId(evento.getUsuarioId());
+        factura.setNombreCliente(evento.getNombreCliente());
         factura.setEmail(evento.getEmail());
-        factura.setTotal(evento.getTotal());
+
+        // Desglose tributario: Total = Neto + IVA
+        BigDecimal total = evento.getTotal();
+        BigDecimal neto = total.divide(FACTOR_IVA, 0, RoundingMode.HALF_UP);
+        BigDecimal iva = total.subtract(neto);
+
+        factura.setNeto(neto);
+        factura.setIva(iva);
+        factura.setTotal(total);
+
         factura.setEstado("EMITIDA");
         factura.setFechaEmision(LocalDateTime.now());
 
@@ -78,9 +96,13 @@ public class FacturaService {
         Factura guardada = repository.save(factura);
 
         log.info(
-                "Factura {} generada para la orden {}",
+                "{} {} generada para la orden {} (neto {}, IVA {}, total {})",
+                TIPO_DOCUMENTO,
                 guardada.getNumeroFactura(),
-                guardada.getOrdenId()
+                guardada.getOrdenId(),
+                neto,
+                iva,
+                total
         );
 
         return guardada;
